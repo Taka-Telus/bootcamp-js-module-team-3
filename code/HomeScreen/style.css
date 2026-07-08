@@ -1,0 +1,30 @@
+body {
+    margin: 0;
+    font-family: "Rubik", sans-serif;
+}
+
+img {
+    width: auto;
+    height: 150px;
+}
+
+#play_content {
+   display: flex;
+   gap: 0.5rem;
+   flex-direction: column; 
+}
+
+ul {
+    display: flex;
+    list-style: none;
+    justify-content: space-between;
+}
+
+.Home_Random-Points {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-left: auto;
+    margin-right: auto;
+    width: 90%;
+}
