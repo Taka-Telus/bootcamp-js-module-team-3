@@ -1,0 +1,67 @@
+body {
+    margin: 0;
+    background-image: url(/images/greenwallp.avif);
+    background-size: auto;
+    font-family: "Rubik", sans-serif;
+    font-weight: 100;
+}
+
+.content {
+    background-color: rgb(255, 255, 255);
+    border-radius: 7px;
+    text-align: center;
+    margin: 20% 15%;
+    height: auto;
+    padding: 4% 8%;
+}
+
+.fa-gamepad {
+    color: white;
+    background-color: green;
+    padding: 5px;
+    border-radius: 2000px;
+    width: 30px;
+    height: 30px;
+}
+
+h1 {
+    color: green;
+}
+
+section {
+    padding: 0 8%;
+}
+
+.bienvenida {
+    color: grey;
+}
+
+.input-box {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.input-box input {
+    border: none;
+    background-color: rgb(232, 232, 232);
+    border-radius: 3px;
+    padding: 10px;
+}
+
+.input-box button {
+    color: white;
+    background-color: green;
+    border: none;
+    border-radius: 3px;
+    padding: 10px;
+}
+
+.input-box button:hover {
+    background-color: rgb(0, 107, 0);
+    color: rgb(189, 255, 184);
+}
+
+.guardarlocalmente {
+    color: grey;
+}
