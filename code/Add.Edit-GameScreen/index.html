@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agregar juego</title>
+</head>
+<body>
+    <h1>Agregar cuestionario</h1>
+
+    <form id="formJuego">
+        <label for="title">Título:</label>
+        <input type="text" id="title" name="title" required>
+
+        <label for="author">Autor:</label>
+        <input type="text" id="author" name="author" required>
+
+        <label for="image">Imagen (URL):</label>
+        <input type="url" id="image" name="image" required>
+
+        <label for="difficulty">Dificultad:</label>
+        <select id="difficulty" name="difficulty" required>
+            <option value="easy">Easy</option>
+            <option value="medium">Medium</option>
+            <option value="hard">Hard</option>
+        </select>
+
+        <h2>Pregunta</h2>
+        <label for="questionText">Pregunta:</label>
+        <input type="text" id="questionText" name="questionText" required>
+
+        <label for="option1">Respuesta 1:</label>
+        <input type="text" id="option1" name="option1" required>
+
+        <label for="option2">Respuesta 2:</label>
+        <input type="text" id="option2" name="option2" required>
+
+        <label for="option3">Respuesta 3:</label>
+        <input type="text" id="option3" name="option3" required>
+
+        <label for="option4">Respuesta 4:</label>
+        <input type="text" id="option4" name="option4" required>
+
+        <button type="submit">Agregar juego</button>
+    </form>
+
+    <div id="resultado"></div>
+
+    <hr>
+
+    <h2>Borrar juego</h2>
+    <form id="formBorrar">
+        <label for="gameId">ID del juego:</label>
+        <input type="text" id="gameId" name="gameId" required>
+        <button type="submit">Borrar juego</button>
+    </form>
+
+    <div id="resultadoBorrar"></div>
+
+    <script>
+        const urlAPI = 'https://quiz-api.cesar-kastli.workers.dev/games';
+        const form = document.getElementById('formJuego');
+        const resultado = document.getElementById('resultado');
+
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const title = document.getElementById('title').value.trim();
+            const author = document.getElementById('author').value.trim();
+            const image = document.getElementById('image').value.trim();
+            const difficulty = document.getElementById('difficulty').value;
+            const questionText = document.getElementById('questionText').value.trim();
+            const options = [
+                document.getElementById('option1').value.trim(),
+                document.getElementById('option2').value.trim(),
+                document.getElementById('option3').value.trim(),
+                document.getElementById('option4').value.trim()
+            ];
+            
+            if (options.some((option) => option === '')) {
+                resultado.innerHTML = '<p style="color:red;">Completa todas las respuestas.</p>';
+                return;
+            }
+
+            try {
+                const respuesta = await fetch(urlAPI, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        title,
+                        author,
+                        image,
+                        difficulty,
+                        questions: [
+                            {
+                                text: questionText,
+                                options: options
+                            }
+                        ]
+                    })
+                });
+
+                if (!respuesta.ok) {
+                    throw new Error('No se pudo crear el juego');
+                }
+
+                const juegoCreado = await respuesta.json();
+
+                resultado.innerHTML = `
+                    <h3>Juego creado correctamente</h3>
+                    <p><strong>Título:</strong> ${juegoCreado.title}</p>
+                    <p><strong>ID:</strong> ${juegoCreado.id}</p>
+                    <p><strong>Autor:</strong> ${juegoCreado.author}</p>
+                    <p><strong>Dificultad:</strong> ${juegoCreado.difficulty || 'Sin dato'}</p>
+                    <img src="${juegoCreado.image}" alt="${juegoCreado.title}" width="200">
+                `;
+
+                form.reset();
+            } catch (error) {
+                console.error(error);
+                resultado.innerHTML = '<p style="color:red;">No se pudo agregar el juego.</p>';
+            }
+        });
+
+        // Borrar juego
+        const formBorrar = document.getElementById('formBorrar');
+        const resultadoBorrar = document.getElementById('resultadoBorrar');
+
+        formBorrar.addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const gameId = document.getElementById('gameId').value.trim();
+
+            if (!gameId) {
+                resultadoBorrar.innerHTML = '<p style="color:red;">Ingresa un ID de juego.</p>';
+                return;
+            }
+
+            try {
+                const respuesta = await fetch(`${urlAPI}/${gameId}`, {
+                    method: 'DELETE'
+                });
+
+                if (!respuesta.ok) {
+                    const errorData = await respuesta.text();
+                    throw new Error(`Error ${respuesta.status}: ${errorData}`);
+                }
+
+                resultadoBorrar.innerHTML = `<p style="color:green;">Juego ${gameId} borrado correctamente.</p>`;
+                formBorrar.reset();
+            } catch (error) {
+                console.error(error);
+                resultadoBorrar.innerHTML = `<p style="color:red;">Error: ${error.message}</p>`;
+            }
+        });
+    </script>
+</body>
+</html>
