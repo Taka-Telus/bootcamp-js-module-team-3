@@ -34,12 +34,13 @@
     </section>
     <section>
         <ul id="juegos"></ul>
+        <button id="addGame">+</button>
     </section>
 
     <script>
         const urlAPI = 'https://quiz-api.cesar-kastli.workers.dev/games';
 
-        async function obtenerJuegos() {
+        async function obtainGames() {
             try {
                 const respuesta = await fetch(urlAPI);
                 const datos = await respuesta.json();
@@ -48,7 +49,7 @@
                     const li = document.createElement("li");
                     li.innerHTML = `
                     <div id='play_content'>
-                    <span> titulo: ${element.title}</span>
+                    <span>${element.title}</span>
                     <img src='${element.image}'></img>
                     <button>Editar</button>
                     <button>Jugar</button>
@@ -64,8 +65,8 @@
                 })
             })
         }
-        obtenerJuegos()
-
+        obtainGames()
+        const addGame = document.getElementById('addGame')
         let name = localStorage.getItem('nombreUsuario')
 
         if (!name || name.trim() === '') {
@@ -74,6 +75,10 @@
             const ready = document.getElementById('home/readyName')
             ready.innerHTML = `Ready for a challenge, ${name}?`
         }
+        addGame.addEventListener('click', () => {
+            window.location.href = '../Add.Edit-GameScreen/index.html'
+        })
+        
 
     </script>
 </body>
