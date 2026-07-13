@@ -1,28 +1,28 @@
-
-
-
 const baseUrl = "https://quiz-api.cesar-kastli.workers.dev";
-let preguntaActual = 0; // variable para asignar la posición de cada pregunta.
 
-const section = document.getElementById("section");
-
-let indice = 2
+// Obtener ID de la URL
+const params = new URLSearchParams(window.location.search);
+const gameId = params.get("id");
 
 async function obtenerGame() {
-    const response = await fetch(`${baseUrl}/games`);      // Obtiene la lista de juegos
-    const games = await response.json();                   // Convierte la respuesta a JSON, sin esto no se puede acceder a los datos de la respuesta.
-    const gameId = games[indice]?.id;                           // crea gameId con el id del objeto indicado
-
-    if (!gameId) {                                         // si no hay id, significa que no hay juegos.
+    if (!gameId) {
         section.innerHTML = "<h2>No se encontró ningún juego.</h2>";
         return;
     }
 
-    const gameResponse = await fetch(`${baseUrl}/games/${gameId}`); // Obtiene el juego con el id especificado
-    const game = await gameResponse.json();                         // Convierte la respuesta a JSON, y nombra 'game' al objeto.
-
-    mostrarPregunta(game); // Esta funcion muestra cada pregunta con sus respuestas.
+    try {
+        const response = await fetch(`${baseUrl}/games/${gameId}`);
+        const game = await response.json();
+        mostrarPregunta(game);
+    } catch (error) {
+        console.error(error);
+        section.innerHTML = "<h2>Error al cargar el juego.</h2>";
+    }
 }
+
+let preguntaActual = 0;
+
+const section = document.getElementById("section");
 
 obtenerGame();  // Llama a la funcion para obtener el juego y mostrar la primera pregunta.
 
@@ -86,6 +86,7 @@ function mostrarPregunta(game) {
                     mostrarPregunta(game); // Empieza denuevo la funcion para mostrar la sig pregunta.
                 } else {
                     section.innerHTML = "<h2>¡Quiz finalizado!</h2>";
+                    window.location.href = '../Score/ScoreScreen.html';
                 }
 
             });
