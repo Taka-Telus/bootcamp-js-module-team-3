@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,6 +10,7 @@
     <link href="fonts.googleapis.com/css2?family=…&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
     <header>
         <button id="backButton">
@@ -176,30 +178,40 @@
             }
             try {
                 deleteButton.style.display = "inline-block";
-                document.getElementById("pageTitle").textContent =
-                    "Editar Juego";
+                document.getElementById("pageTitle").textContent = "Editar Juego";
+
                 const response = await fetch(`${API}/${gameId}`);
+                console.log("Response status:", response.status);
+
                 if (!response.ok)
                     throw new Error("No se pudo cargar.");
+
                 const game = await response.json();
-                document.getElementById("title").value =
-                    game.title || "";
-                document.getElementById("author").value =
-                    game.author || "";
-                document.getElementById("description").value =
-                    game.description || "";
-                document.getElementById("image").value =
-                    game.image || "";
-                document.getElementById("difficulty").value =
-                    game.difficulty || "easy";
+                console.log("Game data:", game);
+                console.log("Questions:", game.questions);
+
+                document.getElementById("title").value = game.title || "";
+                document.getElementById("author").value = game.author || "";
+                document.getElementById("description").value = game.description || "";
+                document.getElementById("image").value = game.image || "";
+                document.getElementById("difficulty").value = game.difficulty || "easy";
+
                 questionsContainer.innerHTML = "";
-                game.questions.forEach(question => {
+
+                if (!game.questions || game.questions.length === 0) {
+                    console.warn("No hay preguntas");
+                    createQuestion();
+                    return;
+                }
+
+                game.questions.forEach((question, index) => {
+                    console.log(`Creating question ${index}:`, question);
                     createQuestion(question);
                 });
             }
             catch (error) {
-                console.error(error);
-                alert("No se pudo cargar el juego.");
+                console.error("Error completo:", error);
+                alert("No se pudo cargar el juego: " + error.message);
             }
         }
         form.addEventListener("submit", async (e) => {
@@ -213,12 +225,15 @@
                     ).map(option => option.value)
                 });
             });
-            const game = {
+            const baseGame = {
                 title: document.getElementById("title").value,
                 author: document.getElementById("author").value,
                 description: document.getElementById("description").value,
                 image: document.getElementById("image").value,
-                difficulty: document.getElementById("difficulty").value,
+                difficulty: document.getElementById("difficulty").value
+            };
+            const game = {
+                ...baseGame,
                 questions: questions
             };
             try {
@@ -238,14 +253,37 @@
                         headers: {
                             "Content-Type": "application/json"
                         },
-                        body: JSON.stringify(game)
+                        body: JSON.stringify(baseGame)
                     });
                 }
                 if (!response.ok) {
                     const error = await response.text();
                     throw new Error(error);
                 }
+                const savedGame = await response.json();
+
+                if (!gameId && questions.length > 0) {
+                    const questionsPayload = { questions };
+                    const patchResponse = await fetch(API + "/" + savedGame.id, {
+                        method: "PATCH",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify(questionsPayload)
+                    });
+                    if (!patchResponse.ok) {
+                        const error = await patchResponse.text();
+                        throw new Error("No se pudieron guardar las preguntas: " + error);
+                    }
+                }
+
                 showMessage("Juego guardado correctamente.", "success");
+
+                if (!gameId && savedGame && savedGame.id) {
+                    setTimeout(() => {
+                        window.location.href = `?id=${savedGame.id}`;
+                    }, 1500);
+                }
             }
             catch (error) {
                 console.error(error);
@@ -277,4 +315,5 @@
         loadGame();
     </script>
 </body>
+
 </html>
