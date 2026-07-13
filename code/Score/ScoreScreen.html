@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TriviaBlast - ScoreScreen</title>
+</head>
+
+<body>
+    <button id="return">Volver a pagina principal</button>
+    <script>
+        const Return = document.getElementById("return")
+
+        Return.addEventListener('click', () => {
+            location.reload()
+            window.location.href = '../HomeScreen/index.html'
+        })
+    </script>
+</body>
+
+</html>
