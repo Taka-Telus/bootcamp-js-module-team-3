@@ -7,7 +7,8 @@
     <title>MainScreen - TriviaBlast</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 
@@ -45,25 +46,38 @@
                 const respuesta = await fetch(urlAPI);
                 const datos = await respuesta.json();
                 const contenedor = document.getElementById('juegos');
-                datos.forEach((element, index) => {
+                contenedor.innerHTML = "";
+                datos.forEach((element) => {
                     const li = document.createElement("li");
-                    li.innerHTML = `
-                    <div id='play_content'>
+                    li.innerHTML = `<div id="play_content">
                     <span>${element.title}</span>
-                    <img src='${element.image}'></img>
-                    <button>Editar</button>
-                    <button>Jugar</button>
+                    <img src="${element.image}" alt="${element.title}">
+                    <button class="editar" data-id="${element.id}">
+                        Editar
+                    </button>
+                    <button class="jugar" data-id="${element.id}">
+                        Jugar
+                    </button>
                     </div>`;
                     contenedor.appendChild(li);
                 });
-            } catch (error) {
-                console.error('Error al conectar con la API:', error);
+                document.querySelectorAll(".editar").forEach(boton => {
+                    boton.addEventListener("click", () => {
+                        const id = boton.dataset.id;
+                        window.location.href =
+                            `../Add.Edit-GameScreen/index.html?id=${id}`;
+                    });
+                });
+                document.querySelectorAll(".jugar").forEach(boton => {
+                    boton.addEventListener("click", () => {
+                        const id = boton.dataset.id;
+                        console.log("Jugar", id);
+                    });
+                });
             }
-            Array.from(document.getElementsByTagName('button')).forEach(button => {
-                button.addEventListener('click', () => {
-                    console.log('click')
-                })
-            })
+            catch (error) {
+                console.error("Error al conectar con la API:", error);
+            }
         }
         obtainGames()
         const addGame = document.getElementById('addGame')
@@ -78,7 +92,8 @@
         addGame.addEventListener('click', () => {
             window.location.href = '../Add.Edit-GameScreen/index.html'
         })
-        
+
+
 
     </script>
 </body>
