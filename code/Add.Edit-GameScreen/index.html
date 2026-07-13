@@ -2,160 +2,279 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="style.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agregar juego</title>
+    <title>Agregar / Editar Juego - TriviaBlast</title>
+    <link rel="preconnect" href="fonts.googleapis.com">
+    <link rel="preconnect" href="fonts.gstatic.com" crossorigin>
+    <link href="fonts.googleapis.com/css2?family=…&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Agregar cuestionario</h1>
+    <header>
+        <button id="backButton">
+            Volver
+        </button>
+        <h1>TriviaBlast</h1>
+    </header>
+    <main>
+        <h2 id="pageTitle">
+            Nuevo Juego
+        </h2>
 
-    <form id="formJuego">
-        <label for="title">Título:</label>
-        <input type="text" id="title" name="title" required>
+        <form id="gameForm">
+            <section>
+                <h3>Información Básica</h3>
 
-        <label for="author">Autor:</label>
-        <input type="text" id="author" name="author" required>
+                <label for="title">
+                    Título
+                </label>
+                <input type="text" id="title" required>
 
-        <label for="image">Imagen (URL):</label>
-        <input type="url" id="image" name="image" required>
+                <label for="author">
+                    Autor
+                </label>
+                <input type="text" id="author" required>
 
-        <label for="difficulty">Dificultad:</label>
-        <select id="difficulty" name="difficulty" required>
-            <option value="easy">Easy</option>
-            <option value="medium">Medium</option>
-            <option value="hard">Hard</option>
-        </select>
+                <label for="description">
+                    Descripción
+                </label>
+                <textarea id="description" rows="4"></textarea>
 
-        <h2>Pregunta</h2>
-        <label for="questionText">Pregunta:</label>
-        <input type="text" id="questionText" name="questionText" required>
+                <label for="image">
+                    Imagen (URL)
+                </label>
+                <input type="url" id="image">
 
-        <label for="option1">Respuesta 1:</label>
-        <input type="text" id="option1" name="option1" required>
+                <label for="difficulty">
+                    Dificultad
+                </label>
+                <select id="difficulty">
+                    <option value="easy">
+                        Easy
+                    </option>
+                    <option value="medium">
+                        Medium
+                    </option>
+                    <option value="hard">
+                        Hard
+                    </option>
+                </select>
+            </section>
 
-        <label for="option2">Respuesta 2:</label>
-        <input type="text" id="option2" name="option2" required>
+            <hr>
 
-        <label for="option3">Respuesta 3:</label>
-        <input type="text" id="option3" name="option3" required>
+            <section>
+                <h3>Preguntas</h3>
 
-        <label for="option4">Respuesta 4:</label>
-        <input type="text" id="option4" name="option4" required>
+                <div id="questionsContainer">
+                </div>
 
-        <button type="submit">Agregar juego</button>
-    </form>
+                <br>
 
-    <div id="resultado"></div>
+                <button type="button" id="addQuestion">
+                    + Agregar Pregunta
+                </button>
+            </section>
 
-    <hr>
+            <hr>
 
-    <h2>Borrar juego</h2>
-    <form id="formBorrar">
-        <label for="gameId">ID del juego:</label>
-        <input type="text" id="gameId" name="gameId" required>
-        <button type="submit">Borrar juego</button>
-    </form>
+            <section>
+                <button type="submit" id="saveButton">
+                    Guardar Juego
+                </button>
 
-    <div id="resultadoBorrar"></div>
+                <button type="button" id="deleteButton" style="display:none;">
+                    Borrar Juego
+                </button>
+            </section>
+        </form>
+
+        <div id="message"></div>
+    </main>
 
     <script>
-        const urlAPI = 'https://quiz-api.cesar-kastli.workers.dev/games';
-        const form = document.getElementById('formJuego');
-        const resultado = document.getElementById('resultado');
-
-        form.addEventListener('submit', async (event) => {
-            event.preventDefault();
-
-            const title = document.getElementById('title').value.trim();
-            const author = document.getElementById('author').value.trim();
-            const image = document.getElementById('image').value.trim();
-            const difficulty = document.getElementById('difficulty').value;
-            const questionText = document.getElementById('questionText').value.trim();
-            const options = [
-                document.getElementById('option1').value.trim(),
-                document.getElementById('option2').value.trim(),
-                document.getElementById('option3').value.trim(),
-                document.getElementById('option4').value.trim()
-            ];
-            
-            if (options.some((option) => option === '')) {
-                resultado.innerHTML = '<p style="color:red;">Completa todas las respuestas.</p>';
-                return;
-            }
-
-            try {
-                const respuesta = await fetch(urlAPI, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        title,
-                        author,
-                        image,
-                        difficulty,
-                        questions: [
-                            {
-                                text: questionText,
-                                options: options
-                            }
-                        ]
-                    })
-                });
-
-                if (!respuesta.ok) {
-                    throw new Error('No se pudo crear el juego');
-                }
-
-                const juegoCreado = await respuesta.json();
-
-                resultado.innerHTML = `
-                    <h3>Juego creado correctamente</h3>
-                    <p><strong>Título:</strong> ${juegoCreado.title}</p>
-                    <p><strong>ID:</strong> ${juegoCreado.id}</p>
-                    <p><strong>Autor:</strong> ${juegoCreado.author}</p>
-                    <p><strong>Dificultad:</strong> ${juegoCreado.difficulty || 'Sin dato'}</p>
-                    <img src="${juegoCreado.image}" alt="${juegoCreado.title}" width="200">
-                `;
-
-                form.reset();
-            } catch (error) {
-                console.error(error);
-                resultado.innerHTML = '<p style="color:red;">No se pudo agregar el juego.</p>';
-            }
+        const API = "https://quiz-api.cesar-kastli.workers.dev/games";
+        const form = document.getElementById("gameForm");
+        const questionsContainer = document.getElementById("questionsContainer");
+        const addButton = document.getElementById("addQuestion");
+        const deleteButton = document.getElementById("deleteButton");
+        const backButton = document.getElementById("backButton");
+        const params = new URLSearchParams(window.location.search);
+        const gameId = params.get("id");
+        function createQuestion(questionData = null) {
+            const questionNumber = questionsContainer.children.length + 1;
+            const questionDiv = document.createElement("div");
+            questionDiv.className = "question";
+            questionDiv.innerHTML = `
+        <hr>
+        <h4>Pregunta ${questionNumber}</h4>
+        <label>Pregunta</label>
+        <input
+            type="text"
+            class="questionText"
+            value="${questionData ? questionData.text : ""}"
+            required>
+        <label>Respuesta A</label>
+        <input
+            type="text"
+            class="option"
+            value="${questionData ? questionData.options[0] : ""}"
+            required>
+        <label>Respuesta B</label>
+        <input
+            type="text"
+            class="option"
+            value="${questionData ? questionData.options[1] : ""}"
+            required>
+        <label>Respuesta C</label>
+        <input
+            type="text"
+            class="option"
+            value="${questionData ? questionData.options[2] : ""}"
+            required>
+        <label>Respuesta D</label>
+        <input
+            type="text"
+            class="option"
+            value="${questionData ? questionData.options[3] : ""}"
+            required>
+        <button
+            type="button"
+            class="deleteQuestion">
+            Eliminar Pregunta
+        </button>
+    `;
+            questionDiv.querySelector(".deleteQuestion").addEventListener("click", () => {
+                questionDiv.remove();
+                updateQuestionNumbers();
+            });
+            questionsContainer.appendChild(questionDiv);
+        }
+        function updateQuestionNumbers() {
+            const questions = document.querySelectorAll(".question");
+            questions.forEach((question, index) => {
+                question.querySelector("h4").textContent =
+                    `Pregunta ${index + 1}`;
+            });
+        }
+        addButton.addEventListener("click", () => {
+            createQuestion();
         });
-
-        // Borrar juego
-        const formBorrar = document.getElementById('formBorrar');
-        const resultadoBorrar = document.getElementById('resultadoBorrar');
-
-        formBorrar.addEventListener('submit', async (event) => {
-            event.preventDefault();
-
-            const gameId = document.getElementById('gameId').value.trim();
-
+        function showMessage(text, type = "info") {
+            const message = document.getElementById("message");
+            message.textContent = text;
+            message.className = type;
+            setTimeout(() => {
+                message.textContent = "";
+                message.className = "";
+            }, 3000);
+        }
+        async function loadGame() {
             if (!gameId) {
-                resultadoBorrar.innerHTML = '<p style="color:red;">Ingresa un ID de juego.</p>';
+                createQuestion();
                 return;
             }
-
             try {
-                const respuesta = await fetch(`${urlAPI}/${gameId}`, {
-                    method: 'DELETE'
+                deleteButton.style.display = "inline-block";
+                document.getElementById("pageTitle").textContent =
+                    "Editar Juego";
+                const response = await fetch(API + "/" + gameId);
+                if (!response.ok)
+                    throw new Error("No se pudo cargar.");
+                const game = await response.json();
+                document.getElementById("title").value =
+                    game.title || "";
+                document.getElementById("author").value =
+                    game.author || "";
+                document.getElementById("description").value =
+                    game.description || "";
+                document.getElementById("image").value =
+                    game.image || "";
+                document.getElementById("difficulty").value =
+                    game.difficulty || "easy";
+                questionsContainer.innerHTML = "";
+                game.questions.forEach(question => {
+                    createQuestion(question);
                 });
-
-                if (!respuesta.ok) {
-                    const errorData = await respuesta.text();
-                    throw new Error(`Error ${respuesta.status}: ${errorData}`);
-                }
-
-                resultadoBorrar.innerHTML = `<p style="color:green;">Juego ${gameId} borrado correctamente.</p>`;
-                formBorrar.reset();
-            } catch (error) {
+            }
+            catch (error) {
                 console.error(error);
-                resultadoBorrar.innerHTML = `<p style="color:red;">Error: ${error.message}</p>`;
+                alert("No se pudo cargar el juego.");
+            }
+        }
+        form.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const questions = [];
+            document.querySelectorAll(".question").forEach(question => {
+                questions.push({
+                    text: question.querySelector(".questionText").value,
+                    options: Array.from(
+                        question.querySelectorAll(".option")
+                    ).map(option => option.value)
+                });
+            });
+            const game = {
+                title: document.getElementById("title").value,
+                author: document.getElementById("author").value,
+                description: document.getElementById("description").value,
+                image: document.getElementById("image").value,
+                difficulty: document.getElementById("difficulty").value,
+                questions: questions
+            };
+            try {
+                let response;
+                if (gameId) {
+                    response = await fetch(API + "/" + gameId, {
+                        method: "PATCH",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify(game)
+                    });
+                }
+                else {
+                    response = await fetch(API, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify(game)
+                    });
+                }
+                if (!response.ok) {
+                    const error = await response.text();
+                    throw new Error(error);
+                }
+                showMessage("Juego guardado correctamente.", "success");
+            }
+            catch (error) {
+                console.error(error);
+                showMessage("No se pudo guardar el juego.", "error");
             }
         });
+        deleteButton.addEventListener("click", async () => {
+            if (!confirm("¿Seguro que quieres borrar este juego?"))
+                return;
+            try {
+                const response = await fetch(API + "/" + gameId, {
+                    method: "DELETE"
+                });
+                if (!response.ok)
+                    throw new Error("No se pudo borrar.");
+                showMessage("Juego eliminado.", "success");
+                window.location.href =
+                    "../HomeScreen/index.html";
+            }
+            catch (error) {
+                console.error(error);
+                alert("Error al borrar el juego.");
+            }
+        });
+        backButton.addEventListener("click", () => {
+            window.location.href =
+                "../HomeScreen/index.html";
+        });
+        loadGame();
     </script>
 </body>
 </html>
