@@ -71,7 +71,8 @@
                 document.querySelectorAll(".jugar").forEach(boton => {
                     boton.addEventListener("click", () => {
                         const id = boton.dataset.id;
-                        console.log("Jugar", id);
+                        window.location.href =
+                            `../PlayingScreen/index.html?id=${id}`;
                     });
                 });
             }
