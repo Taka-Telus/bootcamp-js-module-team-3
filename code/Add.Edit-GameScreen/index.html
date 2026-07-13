@@ -178,7 +178,7 @@
                 deleteButton.style.display = "inline-block";
                 document.getElementById("pageTitle").textContent =
                     "Editar Juego";
-                const response = await fetch(API + "/" + gameId);
+                const response = await fetch(`${API}/${gameId}`);
                 if (!response.ok)
                     throw new Error("No se pudo cargar.");
                 const game = await response.json();
