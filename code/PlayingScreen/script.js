@@ -42,8 +42,8 @@ function finalizarQuiz(mensaje) {
 }
 
 function calcularYGuardarPuntos() {
-    const puntosPregunta = numero * 4; // tiempo restante * 4
-    const puntosActuales = parseInt(localStorage.getItem("puntos"));
+    const puntosPregunta = (typeof numero === 'number' && numero > 0) ? numero * 4 : 0; // tiempo restante * 4
+    const puntosActuales = parseInt(localStorage.getItem("puntos")) || 0;
     const puntosTotal = puntosActuales + puntosPregunta;
     localStorage.setItem("puntos", puntosTotal);
     console.log(`Puntos ganados: ${puntosPregunta}, Total: ${puntosTotal}`);
@@ -71,32 +71,41 @@ function mostrarPregunta(game) {
 
     let respondida = false; // evita que se pueda responder mas de una vez.
 
-    game.questions[preguntaActual].options.forEach((textoOpcion) => {
+    // Preparar opciones: crear objetos con marca de correcta y mezclar todas
+    const opcionesOriginales = game.questions[preguntaActual].options;
+    const opcionesObj = opcionesOriginales.map((texto, idx) => ({ texto, isCorrect: idx === 0 }));
+    // Fisher-Yates shuffle para todas las opciones
+    for (let i = opcionesObj.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [opcionesObj[i], opcionesObj[j]] = [opcionesObj[j], opcionesObj[i]];
+    }
 
+    opcionesObj.forEach((opt) => {
         const li = document.createElement("li");    // crea los <li>
-        li.textContent = textoOpcion;
+        li.textContent = opt.texto;
+        if (opt.isCorrect) li.dataset.correct = "true";
         opciones.appendChild(li);
 
         li.addEventListener("click", () => {
-
             if (respondida || tiempoTerminado) return;
 
             respondida = true;
             calcularYGuardarPuntos(); // Calcula y guarda los puntos
 
-            if (textoOpcion === game.questions[preguntaActual].options[0]) {
+            if (li.dataset.correct === "true") {
                 console.log("Correcto");
                 li.classList.add("correcto");
                 respuesta.textContent = "Respuesta correcta!";
                 respuesta.style.display = "block";
-                respuesta.classList.add("mensaje-respuesta-correcta")
+                respuesta.classList.add("mensaje-respuesta-correcta");
             } else {
                 console.log("Incorrecto");
                 li.classList.add("incorrecto");
-                opciones.children[0].classList.add("correcto");
+                const correctLi = opciones.querySelector('li[data-correct="true"]');
+                if (correctLi) correctLi.classList.add("correcto");
                 respuesta.textContent = "Respuesta incorrecta!";
                 respuesta.style.display = "block";
-                respuesta.classList.add("mensaje-respuesta-incorrecta")
+                respuesta.classList.add("mensaje-respuesta-incorrecta");
             }
 
             const button = document.createElement("button");
@@ -104,7 +113,6 @@ function mostrarPregunta(game) {
             section.appendChild(button);
 
             button.addEventListener("click", () => {
-
                 preguntaActual++; // pasa a la sig pregunta.
                 reiniciarTiempo(); // reinicia el temporizador a 25 segundos
 
@@ -114,11 +122,8 @@ function mostrarPregunta(game) {
                     section.innerHTML = "<h2>¡Quiz finalizado!</h2>";
                     window.location.href = '../Score/ScoreScreen.html';
                 }
-
             });
-
         });
-
     });
 
 }
@@ -126,30 +131,28 @@ function mostrarPregunta(game) {
 const cajita = document.getElementById('show-time');
 let numero = 25;
 let intervaloTiempo;
-cajita.textContent = numero;
+if (cajita) cajita.textContent = numero;
 
 function time_left() {
     numero--;
-    cajita.textContent = numero;
+    if (cajita) cajita.textContent = numero;
 
     if (numero <= 0) {
-        cajita.textContent = '0';
+        if (cajita) cajita.textContent = '0';
         finalizarQuiz("¡Se acabó el tiempo!");
     }
 }
 
 function reiniciarTiempo() {
     numero = 25;
-    cajita.textContent = numero;
+    if (cajita) cajita.textContent = numero;
     clearInterval(intervaloTiempo);
     intervaloTiempo = setInterval(time_left, 1000);
 }
 
 intervaloTiempo = setInterval(time_left, 1000);
 
-const score = document.getElementById('score')
-
-let Points_Var = localStorage.getItem("puntos")
-
-score.innerHTML = `${Points_Var}`
+const score = document.getElementById('score');
+let Points_Var = localStorage.getItem("puntos") || 0;
+if (score) score.innerHTML = `${Points_Var}`;
 
