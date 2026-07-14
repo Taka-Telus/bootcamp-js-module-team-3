@@ -10,24 +10,29 @@
     <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+  <script src="https://kit.fontawesome.com/ada462c236.js" crossorigin="anonymous"></script>
 </head>
 
 <body>
     <nav>
         <h1>TriviaBlast</h1>
-        <div class="puntaje">
-            <span>Puntaje</span>
-            <span>2,450 XP</span>  <!-- aca debe ir puntaje con js -->
+        <div class="derechanav">
+            <div class="puntaje">
+                <span>Puntaje</span>
+                <span>2,450 XP</span>  <!-- aca debe ir puntaje con js -->
+            </div>
+            <i id="fa_gear" class="fa-solid fa-gear"></i>
         </div>
     </nav>
-    <main>
+    <main class="main">
         <section class="header">
             <div class="random-play">
                 <div class="random-play-text">
-                    <h2 id="home/readyName"></h2>
+                    <h3 id="home/readyName"></h3>
                     <p>Your daily streak is at 5 days. Complete one more trivia today to unlock the Bronze Badge</p>
                     <div class="random-play-button">
                         <button>
+                            <i class="fa-solid fa-rocket"></i>
                             <span>Random Play</span>
                         </button>
                     </div>
@@ -38,73 +43,15 @@
                 <span>TOTAL POINTS</span>
             </div>
         </section>
+        <h2>Your Games</h2>
         <section class="games-list">
             <ul id="juegos"></ul>
             <button id="addGame">+</button>
         </section>
     </main>
 
-    <script>
-        const urlAPI = 'https://quiz-api.cesar-kastli.workers.dev/games';
+    <script src="script.js"></script>
 
-        async function obtainGames() {
-            try {
-                const respuesta = await fetch(urlAPI);
-                const datos = await respuesta.json();
-                const contenedor = document.getElementById('juegos');
-                contenedor.innerHTML = "";
-                datos.forEach((element) => {
-                    const li = document.createElement("li");
-                    li.innerHTML = `<div id="play_content">
-                    <img src="${element.image}" alt="${element.title}">
-                    <span>${element.title}</span>
-                    <div class = "play-edit">
-                    <button class="jugar" data-id="${element.id}">
-                        Jugar
-                    </button>
-                    <button class="editar" data-id="${element.id}">
-                        Editar
-                    </button>
-                    </div>
-                    </div>`;
-                    contenedor.appendChild(li);
-                });
-                document.querySelectorAll(".editar").forEach(boton => {
-                    boton.addEventListener("click", () => {
-                        const id = boton.dataset.id;
-                        window.location.href =
-                            `../Add.Edit-GameScreen/index.html?id=${id}`;
-                    });
-                });
-                document.querySelectorAll(".jugar").forEach(boton => {
-                    boton.addEventListener("click", () => {
-                        const id = boton.dataset.id;
-                        window.location.href =
-                            `../PlayingScreen/index.html?id=${id}`;
-                    });
-                });
-            }
-            catch (error) {
-                console.error("Error al conectar con la API:", error);
-            }
-        }
-        obtainGames()
-        const addGame = document.getElementById('addGame')
-        let name = localStorage.getItem('nombreUsuario')
-
-        if (!name || name.trim() === '') {
-            window.location.href = '../LoginScreen/login.html'
-        } else {
-            const ready = document.getElementById('home/readyName')
-            ready.innerHTML = `Ready for a challenge, ${name}?`
-        }
-        addGame.addEventListener('click', () => {
-            window.location.href = '../Add.Edit-GameScreen/index.html'
-        })
-
-
-
-    </script>
 </body>
 
 </html>
