@@ -1,7 +1,5 @@
 const baseUrl = "https://quiz-api.cesar-kastli.workers.dev";
 
-
-
 // Obtener ID de la URL
 const params = new URLSearchParams(window.location.search);
 const gameId = params.get("id");
@@ -159,4 +157,6 @@ intervaloTiempo = setInterval(time_left, 1000);
 const score = document.getElementById('score');
 let Points_Var = localStorage.getItem("puntos") || 0;
 if (score) score.innerHTML = `${Points_Var}`;
+
+const game_score = localStorage.setItem("puntosJuego", puntosPregunta)
 
