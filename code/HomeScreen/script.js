@@ -1,4 +1,6 @@
-const urlAPI = 'https://quiz-api.cesar-kastli.workers.dev/games';
+        const urlAPI = 'https://quiz-api.cesar-kastli.workers.dev/games';
+        const numero = document.getElementById('numero')
+        const exp = document.getElementById('exp')
 
         async function obtainGames() {
             try {
@@ -55,6 +57,15 @@ const urlAPI = 'https://quiz-api.cesar-kastli.workers.dev/games';
             window.location.href = '../Add.Edit-GameScreen/index.html'
         })
 
+        if (!localStorage.getItem("puntos")) {
+            localStorage.setItem("puntos", 0);
+        }
+
+        score = localStorage.getItem("puntos")
+
+        numero.innerHTML = `${score}`
+
+        exp.innerHTML = `${score} XP`
 
         // const randomplay = document.getElementsByClassName("random-play-button");
 

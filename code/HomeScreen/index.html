@@ -50,77 +50,7 @@
         </section>
     </main>
 
-    <script>
-        const urlAPI = 'https://quiz-api.cesar-kastli.workers.dev/games';
-        const numero = document.getElementById('numero')
-        const exp = document.getElementById('exp')
-
-        async function obtainGames() {
-            try {
-                const respuesta = await fetch(urlAPI);
-                const datos = await respuesta.json();
-                const contenedor = document.getElementById('juegos');
-                contenedor.innerHTML = "";
-                datos.forEach((element) => {
-                    const li = document.createElement("li");
-                    li.innerHTML = `<div id="play_content">
-                    <img src="${element.image}" alt="${element.title}">
-                    <span>${element.title}</span>
-                    <div class = "play-edit">
-                    <button class="jugar" data-id="${element.id}">
-                        Jugar
-                    </button>
-                    <button class="editar" data-id="${element.id}">
-                        Editar
-                    </button>
-                    </div>
-                    </div>`;
-                    contenedor.appendChild(li);
-                });
-                document.querySelectorAll(".editar").forEach(boton => {
-                    boton.addEventListener("click", () => {
-                        const id = boton.dataset.id;
-                        window.location.href =
-                            `../Add.Edit-GameScreen/index.html?id=${id}`;
-                    });
-                });
-                document.querySelectorAll(".jugar").forEach(boton => {
-                    boton.addEventListener("click", () => {
-                        const id = boton.dataset.id;
-                        window.location.href =
-                            `../PlayingScreen/index.html?id=${id}`;
-                    });
-                });
-            }
-            catch (error) {
-                console.error("Error al conectar con la API:", error);
-            }
-        }
-        obtainGames()
-        const addGame = document.getElementById('addGame')
-        let name = localStorage.getItem('nombreUsuario')
-
-        if (!name || name.trim() === '') {
-            window.location.href = '../LoginScreen/login.html'
-        } else {
-            const ready = document.getElementById('home/readyName')
-            ready.innerHTML = `Ready for a challenge, ${name}?`
-        }
-        addGame.addEventListener('click', () => {
-            window.location.href = '../Add.Edit-GameScreen/index.html'
-        })
-
-        if (!localStorage.getItem("puntos")) {
-            localStorage.setItem("puntos", 0);
-        }
-
-        score = localStorage.getItem("puntos")
-
-        numero.innerHTML = `${score}`
-
-        exp.innerHTML = `${score} XP`
-
-    </script>
+    <script src="script.js"></script>
 </body>
 
 </html>
