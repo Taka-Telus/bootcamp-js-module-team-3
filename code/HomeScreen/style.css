@@ -9,12 +9,14 @@ body {
 /* NAV */
 
 nav {
+    position: fixed;
+    width: 100%;
     display: flex;
     flex-direction: row;
     background-color: white;
     justify-content: space-between;
     box-shadow: 0px 0px 7px 0px rgb(131, 131, 131);
-    padding: 0px 30px;
+    /* padding: 0px 30px; */
 }
 
 nav h1 {
@@ -25,8 +27,22 @@ nav h1 {
 .puntaje {
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
     font-weight: 900;
+    justify-content: center;
+    margin-right: 8%;
+}
+
+.derechanav {
+    display: flex;
+    justify-content: space-around;
+}
+
+.fa-gear {
+    color: rgb(67, 67, 67);
+    align-self: center;
+    justify-content: center;
+    margin-right: 8%;
+    cursor: pointer;
 }
 
 .puntaje span:first-child {
@@ -50,6 +66,7 @@ main {
 /* RANDOM CHALLENGE SECTION */
 
 .header {
+    margin-top: 2%;
     display: flex;
     flex-direction: row;
     gap: 1%;
@@ -70,7 +87,8 @@ main {
     color: white;
     border: none;
     border-radius: 5px;
-    padding: 2%;
+    padding: 1%;
+    cursor: progress;
 }
 
 .points {
@@ -138,7 +156,6 @@ img{
 }
 
 
-
 /* boton jugar */
 .jugar {
     background-color: green;
@@ -147,6 +164,15 @@ img{
     border-radius: 5px;
     padding: 2%;
     min-width: 60%;
+    cursor: pointer;
+}
+
+.editar {
+    border: none;
+    background-color: rgb(246, 246, 246);
+    color: gray;
+    border-radius: 5px;
+    cursor: pointer;
 }
 
 /* añadir juego */
@@ -161,4 +187,5 @@ img{
     bottom: 20px;
     right: 20px;
     z-index: 1000;
+    cursor: pointer;
 }

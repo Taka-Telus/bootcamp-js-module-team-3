@@ -98,6 +98,8 @@ function mostrarPregunta(game) {
                 respuesta.textContent = "Respuesta correcta!";
                 respuesta.style.display = "block";
                 respuesta.classList.add("mensaje-respuesta-correcta");
+                const correctSound = new Audio('./correctSound.mp3');
+                correctSound.play();
             } else {
                 console.log("Incorrecto");
                 li.classList.add("incorrecto");
@@ -106,6 +108,8 @@ function mostrarPregunta(game) {
                 respuesta.textContent = "Respuesta incorrecta!";
                 respuesta.style.display = "block";
                 respuesta.classList.add("mensaje-respuesta-incorrecta");
+                const wrongSound = new Audio('./wrongSound.mp3');
+                wrongSound.play();
             }
 
             const button = document.createElement("button");
