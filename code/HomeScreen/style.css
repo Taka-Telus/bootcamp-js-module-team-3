@@ -1,8 +1,9 @@
 body {
     margin: 0;
     font-family: "Rubik", sans-serif;
-    background-color: rgb(238, 238, 238);
+    background-color: rgb(246, 246, 246);
 }
+
 
 
 /* NAV */
@@ -45,6 +46,7 @@ main {
 }
 
 
+
 /* RANDOM CHALLENGE SECTION */
 
 .header {
@@ -55,6 +57,7 @@ main {
 }
 
 .random-play {
+    background-color: rgb(255, 255, 255);
     border: 1px grey solid;
     border-radius: 10px;
     min-width: 80%;
@@ -72,6 +75,8 @@ main {
 
 .points {
     background-color: green;
+    width: auto;
+    min-width: 15%;
     color: white;
     display: flex;
     flex-direction: column;
@@ -79,46 +84,62 @@ main {
     align-items: center;
     text-align: center;
     border-radius: 10px;
+    font-size: 130%;
 }
 
+
+
+/* ul */
 #juegos {
     list-style: none;
     display: flex;
-    flex-direction: row;
-    justify-content: space-around;
     flex-wrap: wrap;
-    text-align: center;
+    justify-content: center;
+    gap: 4rem;
     padding: 0;
 }
 
 #play_content {
+    width: 290px;
+    height: auto;
+
     display: flex;
     flex-direction: column;
+    justify-content: space-around;
+
+    background: #fff;
+    border: 1px solid rgba(191,191,191,.7);
     border-radius: 20px;
-    background-color: rgb(255, 255, 255);
-    border: 1px rgba(191, 191, 191, 0.683) solid;
-    height: auto;
-    min-height: 14rem;
-    width: 11rem;
-    margin-bottom: 10%;
+    text-align: center;
+    box-shadow: 0px 0px 40px 0px rgba(128, 128, 128, 0.238);
 }
 
-img {
-    height: 8rem;
-    max-width: 11rem;
+img{
+    width: 100%;
+    height: 12rem;
+
     object-fit: fill;
+
     border-top-left-radius: 20px;
     border-top-right-radius: 20px;
+    margin-bottom: 5%;
 }
 
+
+
+/* div con los dos botones */
 .play-edit {
     display: flex;
     flex-direction: row;
     margin-top: 10%;
     justify-content: center;
     gap: 3%;
+    margin-bottom: 5%;
 }
 
+
+
+/* boton jugar */
 .jugar {
     background-color: green;
     color: white;
@@ -128,6 +149,7 @@ img {
     min-width: 60%;
 }
 
+/* añadir juego */
 #addGame {
     background-color: green;
     color: white;
@@ -135,4 +157,8 @@ img {
     border-radius: 100%;
     padding: 16px 24px;
     font-size: 30px;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
 }
