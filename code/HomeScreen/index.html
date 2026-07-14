@@ -17,7 +17,7 @@
         <h1>TriviaBlast</h1>
         <div class="puntaje">
             <span>Puntaje</span>
-            <span>2,450 XP</span>  <!-- aca debe ir puntaje con js -->
+            <span id="exp"></span> <!-- aca debe ir puntaje con js -->
         </div>
     </nav>
     <main>
@@ -34,7 +34,7 @@
                 </div>
             </div>
             <div class="points">
-                <span>2,450</span>
+                <span id="numero"></span>
                 <span>TOTAL POINTS</span>
             </div>
         </section>
@@ -46,6 +46,8 @@
 
     <script>
         const urlAPI = 'https://quiz-api.cesar-kastli.workers.dev/games';
+        const numero = document.getElementById('numero')
+        const exp = document.getElementById('exp')
 
         async function obtainGames() {
             try {
@@ -102,7 +104,15 @@
             window.location.href = '../Add.Edit-GameScreen/index.html'
         })
 
+        if (!localStorage.getItem("puntos")) {
+            localStorage.setItem("puntos", 0);
+        }
 
+        score = localStorage.getItem("puntos")
+
+        numero.innerHTML = `${score}`
+
+        exp.innerHTML = `${score} XP`
 
     </script>
 </body>
