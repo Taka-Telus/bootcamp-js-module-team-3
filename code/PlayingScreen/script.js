@@ -107,7 +107,7 @@ function mostrarPregunta(game) {
 }
 
 const cajita = document.getElementById('show-time');
-let numero = 5;
+let numero = 25;
 cajita.textContent = numero;
 
 function time_left() {
