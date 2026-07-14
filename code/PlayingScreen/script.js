@@ -1,5 +1,7 @@
 const baseUrl = "https://quiz-api.cesar-kastli.workers.dev";
 
+
+
 // Obtener ID de la URL
 const params = new URLSearchParams(window.location.search);
 const gameId = params.get("id");
@@ -23,6 +25,11 @@ async function obtenerGame() {
 let preguntaActual = 0;
 let tiempoTerminado = false;
 
+// Inicializar localStorage para puntos
+if (!localStorage.getItem("puntos")) {
+    localStorage.setItem("puntos", 0);
+}
+
 const section = document.getElementById("section");
 
 obtenerGame();  // Llama a la funcion para obtener el juego y mostrar la primera pregunta.
@@ -32,6 +39,14 @@ function finalizarQuiz(mensaje) {
     clearInterval(intervaloTiempo);
     section.innerHTML = `<h2>${mensaje}</h2>`;
     window.location.href = '../Score/ScoreScreen.html'
+}
+
+function calcularYGuardarPuntos() {
+    const puntosPregunta = numero * 4; // tiempo restante * 4
+    const puntosActuales = parseInt(localStorage.getItem("puntos"));
+    const puntosTotal = puntosActuales + puntosPregunta;
+    localStorage.setItem("puntos", puntosTotal);
+    console.log(`Puntos ganados: ${puntosPregunta}, Total: ${puntosTotal}`);
 }
 
 function mostrarPregunta(game) {
@@ -67,6 +82,7 @@ function mostrarPregunta(game) {
             if (respondida || tiempoTerminado) return;
 
             respondida = true;
+            calcularYGuardarPuntos(); // Calcula y guarda los puntos
 
             if (textoOpcion === game.questions[preguntaActual].options[0]) {
                 console.log("Correcto");
@@ -130,3 +146,10 @@ function reiniciarTiempo() {
 }
 
 intervaloTiempo = setInterval(time_left, 1000);
+
+const score = document.getElementById('score')
+
+let Points_Var = localStorage.getItem("puntos")
+
+score.innerHTML = `${Points_Var}`
+
