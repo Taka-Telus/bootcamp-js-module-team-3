@@ -69,8 +69,6 @@
 
         // const randomplay = document.getElementsByClassName("random-play-button");
 
-        
-
         // function settings() {
         //     const main = document.querySelector(".main");
         //     main.innerHTML = "";
