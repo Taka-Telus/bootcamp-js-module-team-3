@@ -21,12 +21,21 @@ async function obtenerGame() {
 }
 
 let preguntaActual = 0;
+let tiempoTerminado = false;
 
 const section = document.getElementById("section");
 
 obtenerGame();  // Llama a la funcion para obtener el juego y mostrar la primera pregunta.
 
+function finalizarQuiz(mensaje) {
+    tiempoTerminado = true;
+    clearInterval(intervaloTiempo);
+    section.innerHTML = `<h2>${mensaje}</h2>`;
+    window.location.href = '../Score/ScoreScreen.html'
+}
+
 function mostrarPregunta(game) {
+    if (tiempoTerminado) return;
 
     section.innerHTML = ""; // limpia el html de ''section'' por lo tanto, borra todo lo anterior.
 
@@ -55,10 +64,10 @@ function mostrarPregunta(game) {
 
         li.addEventListener("click", () => {
 
-            if (respondida) return;
+            if (respondida || tiempoTerminado) return;
 
             respondida = true;
-            
+
             if (textoOpcion === game.questions[preguntaActual].options[0]) {
                 console.log("Correcto");
                 li.classList.add("correcto");
@@ -96,3 +105,19 @@ function mostrarPregunta(game) {
     });
 
 }
+
+const cajita = document.getElementById('show-time');
+let numero = 5;
+cajita.textContent = numero;
+
+function time_left() {
+    numero--;
+    cajita.textContent = numero;
+
+    if (numero <= 0) {
+        cajita.textContent = '0';
+        finalizarQuiz("¡Se acabó el tiempo!");
+    }
+}
+
+const intervaloTiempo = setInterval(time_left, 1000);
