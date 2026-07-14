@@ -90,6 +90,7 @@ function mostrarPregunta(game) {
             button.addEventListener("click", () => {
 
                 preguntaActual++; // pasa a la sig pregunta.
+                reiniciarTiempo(); // reinicia el temporizador a 25 segundos
 
                 if (preguntaActual < game.questions.length) {
                     mostrarPregunta(game); // Empieza denuevo la funcion para mostrar la sig pregunta.
@@ -108,6 +109,7 @@ function mostrarPregunta(game) {
 
 const cajita = document.getElementById('show-time');
 let numero = 25;
+let intervaloTiempo;
 cajita.textContent = numero;
 
 function time_left() {
@@ -120,4 +122,11 @@ function time_left() {
     }
 }
 
-const intervaloTiempo = setInterval(time_left, 1000);
+function reiniciarTiempo() {
+    numero = 25;
+    cajita.textContent = numero;
+    clearInterval(intervaloTiempo);
+    intervaloTiempo = setInterval(time_left, 1000);
+}
+
+intervaloTiempo = setInterval(time_left, 1000);
