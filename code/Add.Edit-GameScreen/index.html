@@ -9,6 +9,9 @@
     <link rel="preconnect" href="fonts.gstatic.com" crossorigin>
     <link href="fonts.googleapis.com/css2?family=…&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="fonts.googleapis.com">
+    <link rel="preconnect" href="fonts.gstatic.com" crossorigin>
+    <link href="fonts.googleapis.com/css2?family=…&display=swap" rel="stylesheet">
 </head>
 
 <body>
@@ -18,13 +21,13 @@
         </button>
         <h1>TriviaBlast</h1>
     </header>
-    <main>
+    <main class="container">
         <h2 id="pageTitle">
             Nuevo Juego
         </h2>
 
         <form id="gameForm">
-            <section>
+            <section class="card">
                 <h3>Información Básica</h3>
 
                 <label for="title">
@@ -65,7 +68,7 @@
 
             <hr>
 
-            <section>
+            <section class="card">
                 <h3>Preguntas</h3>
 
                 <div id="questionsContainer">
@@ -80,7 +83,7 @@
 
             <hr>
 
-            <section>
+            <section class="buttons">
                 <button type="submit" id="saveButton">
                     Guardar Juego
                 </button>
@@ -95,7 +98,7 @@
     </main>
 
     <script>
-        const API = "https://quiz-api.cesar-kastli.workers.dev/games";
+        const API = "https:quiz-api.cesar-kastli.workers.dev/games";
         const form = document.getElementById("gameForm");
         const questionsContainer = document.getElementById("questionsContainer");
         const addButton = document.getElementById("addQuestion");
