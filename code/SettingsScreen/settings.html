@@ -9,7 +9,7 @@
 </head>
 <body>
     <nav>
-        <h1>TriviaBlast</h1>
+        <h1><a href="../HomeScreen/index.html">TriviaBlast</a></h1>
         <div class="derechanav">
             <div class="puntaje">
                 <span>Puntaje</span>
@@ -19,26 +19,47 @@
         </div>
     </nav>
     <main>
-        <section>
+        <section class="effects-section">
             <h2>Ajustes de juego</h2>
             <p>Personaliza tu experiencia en TriviaBlast. Tus cambios se sincronizan automaticamente.</p>
             <div class="effects">
                 <div class="sound">
-                    <i class="fa-solid fa-volume"></i>
-                    <div>
-                        <span>Sonido del juego</span>
-                        <p>Efectos de sonido y musica de fondo</p>
+                    <div class="sound-left">
+                        <i class="fa-solid fa-volume"></i>
+                        <div>
+                            <span>Sonido del juego</span>
+                            <p>Efectos de sonido y musica de fondo</p>
+                        </div>
                     </div>
+                    <label class="switch">
+                        <input id="sound-checkbox" type="checkbox">
+                        <span class="slider"></span>
+                    </label>
                 </div>
                 <div class="vib">
-                    <i class="fa-solid fa-mobile-vibrate"></i>
-                    <div>
-                        <span>Vibracion</span>
-                        <p>Respuesta háptica al acertar</p>
+                    <div class="vib-left">
+                        <i class="fa-solid fa-mobile-vibrate"></i>
+                        <div>
+                            <span>Vibracion</span>
+                            <p>Respuesta háptica al acertar</p>
+                        </div>
                     </div>
+                    <label class="switch">
+                        <input id="vibrate-checkbox" type="checkbox">
+                        <span class="slider"></span>
+                    </label>
                 </div>
             </div>
+            <p>Nota - Todos los ajustes se guardan localmente en tu dispositivo y se aplican de inmediato en tu próxima partida.</p>
+        </section>
+        <section class="buttons">
+            <div>
+                <button><i class="fa-regular fa-floppy-disk"></i><span>Guardar Cambios</span></button>
+                <button><span><a href="../HomeScreen/index.html">Volver al menú</a></span></button>
+            </div>
+            <button id="logout"><span>Cerrar sesión</span></button>
         </section>
     </main>
+    <script src="script.js"></script>
 </body>
 </html>

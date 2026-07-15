@@ -24,6 +24,12 @@ nav h1 {
     margin: 0.6rem;
 }
 
+nav a{
+    text-decoration: none;
+    color: green;
+    margin: 0.6rem;
+}
+
 .puntaje {
     display: flex;
     flex-direction: column;
