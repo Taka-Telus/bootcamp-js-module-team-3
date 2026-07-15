@@ -105,6 +105,10 @@ function mostrarPregunta(game) {
             if (respondida || tiempoTerminado) return;
 
             respondida = true;
+
+            const sound = localStorage.getItem('sound') !== 'false';
+            const vibrate = localStorage.getItem('vibrate') !== 'false';
+
             if (li.dataset.correct === "true") {
                 console.log("Correcto");
                 li.classList.add("correcto");
@@ -116,8 +120,14 @@ function mostrarPregunta(game) {
                 respuesta.classList.add("mensaje-respuesta-correcta");
 
                 // Reproducir sonido de acierto
-                const correctSound = new Audio('./correctSound.mp3');
-                correctSound.play();
+                if (sound) {
+                    const correctSound = new Audio('./correctSound.mp3');
+                    correctSound.play();
+                }
+                if (vibrate) {
+                    li.classList.add("shake-element");
+                }
+
 
                 calcularYGuardarPuntos();
 
@@ -133,8 +143,10 @@ function mostrarPregunta(game) {
                 respuesta.classList.add("mensaje-respuesta-incorrecta");
 
                 // Reproducir sonido de error
-                const wrongSound = new Audio('./wrongSound.mp3');
-                wrongSound.play();
+                if (sound) {
+                    const wrongSound = new Audio('./wrongSound.mp3');
+                    wrongSound.play();
+                }
 
             }
 
