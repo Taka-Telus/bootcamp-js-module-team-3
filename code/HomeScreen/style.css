@@ -1,30 +1,191 @@
 body {
     margin: 0;
     font-family: "Rubik", sans-serif;
+    background-color: rgb(246, 246, 246);
 }
 
-img {
+
+
+/* NAV */
+
+nav {
+    position: fixed;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    background-color: white;
+    justify-content: space-between;
+    box-shadow: 0px 0px 7px 0px rgb(131, 131, 131);
+    /* padding: 0px 30px; */
+}
+
+nav h1 {
+    color: green;
+    margin: 0.6rem;
+}
+
+.puntaje {
+    display: flex;
+    flex-direction: column;
+    font-weight: 900;
+    justify-content: center;
+    margin-right: 8%;
+}
+
+.derechanav {
+    display: flex;
+    justify-content: space-around;
+}
+
+.fa-gear {
+    color: rgb(67, 67, 67);
+    align-self: center;
+    justify-content: center;
+    margin-right: 8%;
+    cursor: pointer;
+}
+
+.puntaje span:first-child {
+    color: rgb(67, 67, 67);
+}
+
+.puntaje span:last-child {
+    color: green;
+    font-weight: 900;
+}
+
+/* MAIN */
+
+main {
+    padding: 3%;
+    box-sizing: border-box;
+}
+
+
+
+/* RANDOM CHALLENGE SECTION */
+
+.header {
+    margin-top: 2%;
+    display: flex;
+    flex-direction: row;
+    gap: 1%;
+    justify-content: space-between;
+}
+
+.random-play {
+    background-color: rgb(255, 255, 255);
+    border: 1px grey solid;
+    border-radius: 10px;
+    min-width: 80%;
+    padding: 2% 2% 2% 2%;
+    font-size: 80%;
+}
+
+.random-play-button button{
+    background-color: green;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 1%;
+    cursor: progress;
+}
+
+.points {
+    background-color: green;
     width: auto;
-    height: 150px;
+    min-width: 15%;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    border-radius: 10px;
+    font-size: 130%;
+}
+
+
+
+/* ul */
+#juegos {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 4rem;
+    padding: 0;
 }
 
 #play_content {
-   display: flex;
-   gap: 0.5rem;
-   flex-direction: column; 
-}
+    width: 290px;
+    height: auto;
 
-ul {
     display: flex;
-    list-style: none;
-    justify-content: space-between;
+    flex-direction: column;
+    justify-content: space-around;
+
+    background: #fff;
+    border: 1px solid rgba(191,191,191,.7);
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0px 0px 40px 0px rgba(128, 128, 128, 0.238);
 }
 
-.Home_Random-Points {
+img{
+    width: 100%;
+    height: 12rem;
+
+    object-fit: fill;
+
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    margin-bottom: 5%;
+}
+
+
+
+/* div con los dos botones */
+.play-edit {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
-    margin-left: auto;
-    margin-right: auto;
-    width: 90%;
+    margin-top: 10%;
+    justify-content: center;
+    gap: 3%;
+    margin-bottom: 5%;
+}
+
+
+/* boton jugar */
+.jugar {
+    background-color: green;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 2%;
+    min-width: 60%;
+    cursor: pointer;
+}
+
+.editar {
+    border: none;
+    background-color: rgb(246, 246, 246);
+    color: gray;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* añadir juego */
+#addGame {
+    background-color: green;
+    color: white;
+    border: none;
+    border-radius: 100%;
+    padding: 16px 24px;
+    font-size: 30px;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+    cursor: pointer;
 }

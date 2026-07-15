@@ -7,75 +7,51 @@
     <title>MainScreen - TriviaBlast</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+  <script src="https://kit.fontawesome.com/ada462c236.js" crossorigin="anonymous"></script>
 </head>
 
 <body>
-    <div>
-        <div>
-            <h1>TriviaBlast</h1>
-        </div>
-        <div>
-            <div>
-                <p>Puntaje</p>
-                <p id="score"></p>
+    <nav>
+        <h1>TriviaBlast</h1>
+        <div class="derechanav">
+            <div class="puntaje">
+                <span>Puntaje</span>
+                <span>2,450 XP</span>  <!-- aca debe ir puntaje con js -->
             </div>
+            <i id="fa_gear" class="fa-solid fa-gear"></i>
         </div>
-    </div>
-    <section>
-        <div class="Home_Random-Points">
-            <h2 id="home/readyName"></h2>
-            <div style="background-color: green; text-align: center;">
-                <p>1000</p> <!-- aca va el score  -->
-                <p>TOTAL POINTS</p>
+    </nav>
+    <main class="main">
+        <section class="header">
+            <div class="random-play">
+                <div class="random-play-text">
+                    <h3 id="home/readyName"></h3>
+                    <p>Your daily streak is at 5 days. Complete one more trivia today to unlock the Bronze Badge</p>
+                    <div class="random-play-button">
+                        <button>
+                            <i class="fa-solid fa-rocket"></i>
+                            <span>Random Play</span>
+                        </button>
+                    </div>
+                </div>
             </div>
-        </div>
-    </section>
-    <section>
-        <ul id="juegos"></ul>
-    </section>
+            <div class="points">
+                <span>2,450</span>
+                <span>TOTAL POINTS</span>
+            </div>
+        </section>
+        <h2>Your Games</h2>
+        <section class="games-list">
+            <ul id="juegos"></ul>
+            <button id="addGame">+</button>
+        </section>
+    </main>
 
-    <script>
-        const urlAPI = 'https://quiz-api.cesar-kastli.workers.dev/games';
+    <script src="script.js"></script>
 
-        async function obtenerJuegos() {
-            try {
-                const respuesta = await fetch(urlAPI);
-                const datos = await respuesta.json();
-                const contenedor = document.getElementById('juegos');
-                datos.forEach((element, index) => {
-                    const li = document.createElement("li");
-                    li.innerHTML = `
-                    <div id='play_content'>
-                    <span> titulo: ${element.title}</span>
-                    <img src='${element.image}'></img>
-                    <button>Editar</button>
-                    <button>Jugar</button>
-                    </div>`;
-                    contenedor.appendChild(li);
-                });
-            } catch (error) {
-                console.error('Error al conectar con la API:', error);
-            }
-            Array.from(document.getElementsByTagName('button')).forEach(button => {
-                button.addEventListener('click', () => {
-                    console.log('click')
-                })
-            })
-        }
-        obtenerJuegos()
-
-        let name = localStorage.getItem('nombreUsuario')
-
-        if (!name || name.trim() === '') {
-            window.location.href = '../LoginScreen/login.html'
-        } else {
-            const ready = document.getElementById('home/readyName')
-            ready.innerHTML = `Ready for a challenge, ${name}?`
-        }
-
-    </script>
 </body>
 
 </html>
