@@ -1,8 +1,20 @@
-const baseUrl = "https://quiz-api.cesar-kastli.workers.dev";
+const baseUrl = "https:quiz-api.cesar-kastli.workers.dev";
 
-// Obtener ID de la URL
 const params = new URLSearchParams(window.location.search);
 const gameId = params.get("id");
+
+let preguntaActual = 0;
+let tiempoTerminado = false; // Bandera para saber si se acabó el tiempo
+let numero = 25; // Tiempo inicial en segundos
+let intervaloTiempo; 
+
+// Resetear puntos momentáneos al inicio de cada sesión de juego (sin sumar al anterior)
+localStorage.setItem("puntosMomentaneos", 0);
+
+const section = document.getElementById("section");
+
+const cajita = document.getElementById('show-time');
+if (cajita) cajita.textContent = numero;
 
 async function obtenerGame() {
     if (!gameId) {
@@ -13,132 +25,149 @@ async function obtenerGame() {
     try {
         const response = await fetch(`${baseUrl}/games/${gameId}`);
         const game = await response.json();
+
         mostrarPregunta(game);
+        intervaloTiempo = setInterval(time_left, 1000);
     } catch (error) {
         console.error(error);
         section.innerHTML = "<h2>Error al cargar el juego.</h2>";
     }
 }
-
-let preguntaActual = 0;
-let tiempoTerminado = false;
-
-// Inicializar localStorage para puntos
-if (!localStorage.getItem("puntos")) {
-    localStorage.setItem("puntos", 0);
-}
-
-const section = document.getElementById("section");
-
-obtenerGame();  // Llama a la funcion para obtener el juego y mostrar la primera pregunta.
+// Llamar a la función para obtener el juego y mostrar la primera pregunta
+obtenerGame();
 
 function finalizarQuiz(mensaje) {
+    // Marcar como finalizado y detener el temporizador
     tiempoTerminado = true;
     clearInterval(intervaloTiempo);
     section.innerHTML = `<h2>${mensaje}</h2>`;
-    window.location.href = '../Score/ScoreScreen.html'
+    setTimeout(() => {
+        window.location.href = '../Score/ScoreScreen.html';
+    }, 2000);
 }
 
 function calcularYGuardarPuntos() {
-    const puntosPregunta = (typeof numero === 'number' && numero > 0) ? numero * 4 : 0; // tiempo restante * 4
-    const puntosActuales = parseInt(localStorage.getItem("puntos")) || 0;
+    // Calcular puntos: tiempo restante * 4
+    // Si no hay tiempo válido, 0 puntos
+    const puntosPregunta = (typeof numero === 'number' && numero > 0) ? numero * 4 : 0;
+
+    // Obtener los puntos momentáneos actuales
+    const puntosActuales = parseInt(localStorage.getItem("puntosMomentaneos")) || 0;
     const puntosTotal = puntosActuales + puntosPregunta;
-    localStorage.setItem("puntos", puntosTotal);
-    console.log(`Puntos ganados: ${puntosPregunta}, Total: ${puntosTotal}`);
+
+    localStorage.setItem("puntosMomentaneos", puntosTotal);
+    console.log(`Puntos ganados: ${puntosPregunta}, Total momentáneo: ${puntosTotal}`);
 }
 
 function mostrarPregunta(game) {
     if (tiempoTerminado) return;
 
-    section.innerHTML = ""; // limpia el html de ''section'' por lo tanto, borra todo lo anterior.
+    // Limpiar el contenido anterior
+    section.innerHTML = "";
 
-    // Pregunta
-    const question = document.createElement("p"); // crea la pregunta como un <p>
+    const question = document.createElement("p");
     question.textContent = game.questions[preguntaActual].text;
     section.appendChild(question);
 
     const respuesta = document.createElement("p");
-    respuesta.style.display = "none";
+    respuesta.style.display = "none"; 
     question.after(respuesta);
-    respuesta.classList.add("mensaje-respuesta")
+    respuesta.classList.add("mensaje-respuesta");
 
-    // Opciones
-    const opciones = document.createElement("ul"); // crea la <ul>
+    const opciones = document.createElement("ul");
     section.appendChild(opciones);
 
+    // Bandera para evitar múltiples respuestas a la misma pregunta
+    let respondida = false;
 
-    let respondida = false; // evita que se pueda responder mas de una vez.
-
-    // Preparar opciones: crear objetos con marca de correcta y mezclar todas
     const opcionesOriginales = game.questions[preguntaActual].options;
-    const opcionesObj = opcionesOriginales.map((texto, idx) => ({ texto, isCorrect: idx === 0 }));
-    // Fisher-Yates shuffle para todas las opciones
+    const opcionesObj = opcionesOriginales.map((texto, idx) => ({
+        texto,
+        isCorrect: idx === 0
+    }));
+
+    // Algoritmo para mezclar las opciones aleatoriamente
     for (let i = opcionesObj.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [opcionesObj[i], opcionesObj[j]] = [opcionesObj[j], opcionesObj[i]];
     }
 
     opcionesObj.forEach((opt) => {
-        const li = document.createElement("li");    // crea los <li>
+        const li = document.createElement("li");
         li.textContent = opt.texto;
+        // Marcar cuál es la respuesta correcta (con atributo data)
         if (opt.isCorrect) li.dataset.correct = "true";
+
         opciones.appendChild(li);
 
         li.addEventListener("click", () => {
             if (respondida || tiempoTerminado) return;
 
             respondida = true;
-            calcularYGuardarPuntos(); // Calcula y guarda los puntos
-
             if (li.dataset.correct === "true") {
                 console.log("Correcto");
                 li.classList.add("correcto");
-                respuesta.textContent = "Respuesta correcta!";
+
+                // Mostrar mensaje de éxito
+                respuesta.textContent = "¡Respuesta correcta!";
                 respuesta.style.display = "block";
                 respuesta.classList.add("mensaje-respuesta-correcta");
+
+                // Reproducir sonido de acierto
                 const correctSound = new Audio('./correctSound.mp3');
                 correctSound.play();
+
+                calcularYGuardarPuntos();
+
             } else {
                 console.log("Incorrecto");
+
                 li.classList.add("incorrecto");
+
                 const correctLi = opciones.querySelector('li[data-correct="true"]');
                 if (correctLi) correctLi.classList.add("correcto");
-                respuesta.textContent = "Respuesta incorrecta!";
+                respuesta.textContent = "¡Respuesta incorrecta!";
                 respuesta.style.display = "block";
                 respuesta.classList.add("mensaje-respuesta-incorrecta");
+
+                // Reproducir sonido de error
                 const wrongSound = new Audio('./wrongSound.mp3');
                 wrongSound.play();
+
             }
 
             const button = document.createElement("button");
             button.textContent = "Siguiente pregunta";
             section.appendChild(button);
 
+            // EVENT LISTENER de Cuando se hace click en "Siguiente pregunta"
             button.addEventListener("click", () => {
-                preguntaActual++; // pasa a la sig pregunta.
-                reiniciarTiempo(); // reinicia el temporizador a 25 segundos
+                // Pasar a la siguiente pregunta
+                preguntaActual++;
+                reiniciarTiempo();
 
+                // Verificar si hay más preguntas
                 if (preguntaActual < game.questions.length) {
-                    mostrarPregunta(game); // Empieza denuevo la funcion para mostrar la sig pregunta.
+                    mostrarPregunta(game);
                 } else {
                     section.innerHTML = "<h2>¡Quiz finalizado!</h2>";
-                    window.location.href = '../Score/ScoreScreen.html';
+                    setTimeout(() => {
+                        window.location.href = '../Score/ScoreScreen.html';
+                    }, 1500);
                 }
             });
         });
     });
-
 }
 
-const cajita = document.getElementById('show-time');
-let numero = 25;
-let intervaloTiempo;
-if (cajita) cajita.textContent = numero;
-
 function time_left() {
+    // Decrementar un segundo
     numero--;
+
+    // Actualizar el display del tiempo
     if (cajita) cajita.textContent = numero;
 
+    // Si el tiempo se acabó, finalizar el quiz
     if (numero <= 0) {
         if (cajita) cajita.textContent = '0';
         finalizarQuiz("¡Se acabó el tiempo!");
@@ -151,12 +180,3 @@ function reiniciarTiempo() {
     clearInterval(intervaloTiempo);
     intervaloTiempo = setInterval(time_left, 1000);
 }
-
-intervaloTiempo = setInterval(time_left, 1000);
-
-const score = document.getElementById('score');
-let Points_Var = localStorage.getItem("puntos") || 0;
-if (score) score.innerHTML = `${Points_Var}`;
-
-const game_score = localStorage.setItem("puntosJuego", puntosPregunta)
-
