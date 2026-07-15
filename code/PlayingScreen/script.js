@@ -6,7 +6,8 @@ const gameId = params.get("id");
 let preguntaActual = 0;
 let tiempoTerminado = false; // Bandera para saber si se acabó el tiempo
 let numero = 25; // Tiempo inicial en segundos
-let intervaloTiempo; 
+let intervaloTiempo;
+let CorrectAns = 0;
 
 // Resetear puntos momentáneos al inicio de cada sesión de juego (sin sumar al anterior)
 localStorage.setItem("puntosMomentaneos", 0);
@@ -70,7 +71,7 @@ function mostrarPregunta(game) {
     section.appendChild(question);
 
     const respuesta = document.createElement("p");
-    respuesta.style.display = "none"; 
+    respuesta.style.display = "none";
     question.after(respuesta);
     respuesta.classList.add("mensaje-respuesta");
 
@@ -107,7 +108,8 @@ function mostrarPregunta(game) {
             if (li.dataset.correct === "true") {
                 console.log("Correcto");
                 li.classList.add("correcto");
-
+                CorrectAns++
+                console.log(CorrectAns)
                 // Mostrar mensaje de éxito
                 respuesta.textContent = "¡Respuesta correcta!";
                 respuesta.style.display = "block";
@@ -150,6 +152,7 @@ function mostrarPregunta(game) {
                 if (preguntaActual < game.questions.length) {
                     mostrarPregunta(game);
                 } else {
+                    localStorage.setItem("CorrectAnswers", CorrectAns)
                     section.innerHTML = "<h2>¡Quiz finalizado!</h2>";
                     setTimeout(() => {
                         window.location.href = '../Score/ScoreScreen.html';
