@@ -8,25 +8,23 @@
 </head>
 
 <body>
-    <span id="score"></span>
-    <button id="return">Volver a pagina principal</button>
-    <script>
-        // Obtener puntos momentáneos y totales
-        const puntosMomentaneos = parseInt(localStorage.getItem('puntosMomentaneos')) || 0;
-        const puntosActuales = parseInt(localStorage.getItem('puntos')) || 0;
-
-        // Sumar puntos momentáneos a los puntos totales
-        const puntosTotales = puntosActuales + puntosMomentaneos;
-        localStorage.setItem('puntos', puntosTotales);
-
-        // Mostrar puntos de esta sesión
-        document.getElementById('score').textContent = `Puntos: ${puntosMomentaneos}`;
-
-        document.getElementById('return').addEventListener('click', () => {
-            location.reload()
-            window.location.href = '../HomeScreen/index.html'
-        })
-    </script>
+    <header>
+        <h1>TriviaBlast</h1>
+        <div>
+            <span>Puntaje:</span>
+            <span id="numero"></span>
+        </div>
+    </header>
+    <section>
+        <h2>BUEN TRABAJO!</h2>
+        <p>Tu puntaje:</p>
+        <div>
+            <span id="score"></span>
+            <span style="padding-left: 10px;" id="CorrectAns"></span>
+        </div>
+        <button id="return">Volver a pagina principal</button>
+        <script src="script.js"></script>
+    </section>
 </body>
 
 </html>
