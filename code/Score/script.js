@@ -3,6 +3,7 @@ const puntosMomentaneos = parseInt(localStorage.getItem('puntosMomentaneos')) ||
 const puntosActuales = parseInt(localStorage.getItem('puntos')) || 0;
 const numero = document.getElementById('numero')
 const CorrectAns = document.getElementById('CorrectAns')
+const replay = document.getElementById('replay')
 // Sumar puntos momentáneos a los puntos totales
 const puntosTotales = puntosActuales + puntosMomentaneos;
 localStorage.setItem('puntos', puntosTotales);
@@ -14,6 +15,10 @@ document.getElementById('return').addEventListener('click', () => {
     localStorage.setItem("CorrectAnswers", 0)
     location.reload()
     window.location.href = '../HomeScreen/index.html'
+})
+
+replay.addEventListener('click', () => {
+    console.log(`volviendo a null`)
 })
 
 score = localStorage.getItem("puntos")
