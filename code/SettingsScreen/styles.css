@@ -41,7 +41,6 @@ nav a{
 .derechanav {
     display: flex;
     justify-content: space-around;
-    font-weight: 900ff;
 }
 
 .fa-gear {
@@ -62,6 +61,11 @@ nav a{
 }
 
 /* MAIN */
+
+main {
+    padding: 3%;
+    box-sizing: border-box;
+}
 
 main {
     padding: 10%;

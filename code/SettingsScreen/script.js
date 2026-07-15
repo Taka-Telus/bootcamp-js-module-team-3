@@ -37,3 +37,11 @@ logout.addEventListener('click', (event) => {
     location.reload
     
 });
+
+
+
+const numero = document.getElementById('numero')
+const exp = document.getElementById('exp')
+score = localStorage.getItem("puntos")
+numero.innerHTML = `${score}`
+exp.innerHTML = `${score} XP`
