@@ -66,6 +66,7 @@ async function cargarScores() {
         }
 
         leaderboard.innerHTML = scores
+            .slice(0, 5)
             .map((entry, index) => `
                 <tr>
                     <td>${index + 1}</td>
