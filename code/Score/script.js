@@ -10,6 +10,39 @@ const apiBaseUrl = 'https://quiz-api.cesar-kastli.workers.dev';
 const gameId = localStorage.getItem('lastGameId') || new URLSearchParams(window.location.search).get('id');
 const h2 = document.getElementById('h2')
 
+// Función para incrementar el daily streak
+function incrementDailyStreak() {
+    const getDateKey = () => {
+        const today = new Date();
+        return today.toISOString().split('T')[0];
+    };
+    
+    const lastPlayDate = localStorage.getItem('lastPlayDate');
+    const currentDateKey = getDateKey();
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    const yesterdayKey = yesterday.toISOString().split('T')[0];
+
+    let streakCount = parseInt(localStorage.getItem('dailyStreak')) || 0;
+
+    // Si jugó ayer o es la primera vez, incrementar la racha
+    if (!lastPlayDate || lastPlayDate === yesterdayKey || lastPlayDate === currentDateKey) {
+        if (lastPlayDate !== currentDateKey) {
+            streakCount++; // Incrementar solo si no jugó hoy
+        }
+    } else {
+        // La racha se rompió, empezar de nuevo
+        streakCount = 1;
+    }
+
+    localStorage.setItem('dailyStreak', streakCount);
+    localStorage.setItem('lastPlayDate', currentDateKey);
+    return streakCount;
+}
+
+// Actualizar el daily streak cuando se complete un juego
+incrementDailyStreak();
+
 // Sumar puntos momentáneos a los puntos totales
 const puntosTotales = puntosActuales + puntosMomentaneos;
 localStorage.setItem('puntos', puntosTotales);
