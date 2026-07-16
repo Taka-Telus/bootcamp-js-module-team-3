@@ -105,6 +105,7 @@
                 document.getElementById("description").value = game.description || "";
                 document.getElementById("image").value = game.image || "";
                 document.getElementById("difficulty").value = game.difficulty || "Facil";
+                updateImagePreview();
 
                 questionsContainer.innerHTML = "";
 
@@ -224,4 +225,27 @@
                     "../HomeScreen/index.html";
             });
         }
+
+        // Función para actualizar el preview de la imagen
+        function updateImagePreview() {
+            const imageInput = document.getElementById("image");
+            const imagePreview = document.getElementById("imagePreview");
+            const imageUrl = imageInput.value.trim();
+
+            if (imageUrl) {
+                imagePreview.src = imageUrl;
+                imagePreview.style.display = "block";
+                imagePreview.onerror = () => {
+                    imagePreview.style.display = "none";
+                };
+            } else {
+                imagePreview.style.display = "none";
+            }
+        }
+
+        // Event listener para actualizar preview cuando cambia la URL
+        document.getElementById("image").addEventListener("change", updateImagePreview);
+        document.getElementById("image").addEventListener("input", updateImagePreview);
+
         loadGame();
+        updateImagePreview();
