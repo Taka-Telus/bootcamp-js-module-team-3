@@ -41,6 +41,7 @@ nav a{
 .derechanav {
     display: flex;
     justify-content: space-around;
+    min-width: 10%;
 }
 
 .fa-gear {
@@ -94,7 +95,7 @@ main {
     border: none;
     border-radius: 5px;
     padding: 1%;
-    cursor: progress;
+    cursor: pointer;
 }
 
 .points {
@@ -109,6 +110,7 @@ main {
     text-align: center;
     border-radius: 10px;
     font-size: 130%;
+    gap: 5%;
 }
 
 

@@ -2,17 +2,20 @@ body {
     margin: 0;
     background-image: url(/images/greenwallp.avif);
     background-size: auto;
+    height: 100vh;
     font-family: "Rubik", sans-serif;
     font-weight: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .content {
     background-color: rgb(255, 255, 255);
     border-radius: 7px;
     text-align: center;
-    margin: 20% 15%;
     height: auto;
-    padding: 4% 8%;
+    padding-top: 1%;
 }
 
 .fa-gamepad {
