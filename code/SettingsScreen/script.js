@@ -1,47 +1,65 @@
+const exp = document.getElementById("exp");
+exp.innerHTML = `${localStorage.getItem('puntos')}`
+
+
+
+
+
+const soundCheckbox = document.getElementById('sound-checkbox');
+const vibrateCheckbox = document.getElementById('vibrate-checkbox');
+const saveButton = document.getElementById('save-settings');
+
+
+
 
 // AJUSTE DE SONIDO
 
-const soundCheckbox = document.getElementById('sound-checkbox');
-
 const savedSoundPreference = localStorage.getItem('sound');
-const soundEnabled = savedSoundPreference === null ? true : savedSoundPreference === 'true';
+// savedSoucePreference es una variable que obtiene el valor de sound, definido antes.
 
-soundCheckbox.checked = soundEnabled;
+let soundEnabled; // creo una variable para indicar cuándo esta activado
 
-soundCheckbox.addEventListener('change', (evento) => {
-  const isSoundEnabled = evento.target.checked;
-  localStorage.setItem('sound', isSoundEnabled);
-});
+if (savedSoundPreference === true) {
+  soundEnabled = true;
+} else {
+  soundEnabled = false;
+}
+// pregunta si el valor definido antes es true. Si lo es, soundEnable es true. Si no, es false.
+
 
 
 // AJUSTE DE VIBRACION
 
-const vibrateCheckbox = document.getElementById('vibrate-checkbox');
-
 const savedVibratePreference = localStorage.getItem('vibrate');
-const vibrateEnabled = savedVibratePreference === null ? true : savedVibratePreference === 'true';
+let vibrateEnabled;
 
+if (savedVibratePreference === true) {
+  vibrateEnabled = true;
+} else {
+  vibrateEnabled = false;
+}
+
+
+
+soundCheckbox.checked = soundEnabled;       // soundEnabled tendra el valor que le demos a soundCheckBox. Si marcamos la casilla, soundEnabled = true.
 vibrateCheckbox.checked = vibrateEnabled;
 
-vibrateCheckbox.addEventListener('change', (evento) => {
-  const isVibrateEnabled = evento.target.checked;
-  localStorage.setItem('vibrate', isVibrateEnabled);
+
+// parte de localStorage y "guardar cambios"
+saveButton.addEventListener('click', function () {
+  localStorage.setItem('sound', soundCheckbox.checked);
+  localStorage.setItem('vibrate', vibrateCheckbox.checked);
 });
+// a sound y a vibrate le damos el valor de la casilla de checkBox, una vez que se haya clickeado el boton Guardar Cambios.
 
 
-const logout = document.getElementById("logout");
+
+
+const logout = document.getElementById('logout');
 
 logout.addEventListener('click', (event) => {
     localStorage.setItem('nombreUsuario', "");
     window.location.href = '../LoginScreen/login.html'
     location.reload
-    
+
 });
-
-
-
-const numero = document.getElementById('numero')
-const exp = document.getElementById('exp')
-score = localStorage.getItem("puntos")
-numero.innerHTML = `${score}`
-exp.innerHTML = `${score} XP`
