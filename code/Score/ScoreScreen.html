@@ -1,41 +1,95 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TriviaBlast - ScoreScreen</title>
+
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 
 <body>
-    <header>
-        <h1>TriviaBlast</h1>
-        <div>
-            <span>Puntaje:</span>
+
+    <header class="header">
+
+        <h1><a href="../HomeScreen/index.html">TriviaBlast</a></h1>
+
+        <div class="score-header">
+            <span>Puntaje</span>
             <span id="numero"></span>
         </div>
+
     </header>
-    <section>
-        <h2>BUEN TRABAJO!</h2>
-        <p>Tu puntaje:</p>
-        <div>
-            <span id="score"></span>
-            <span style="padding-left: 10px;" id="CorrectAns"></span>
+
+    <main class="container">
+
+        <section class="result">
+
+            <i id="trophy" class="fa fa-trophy" aria-hidden="true"></i>
+
+            <h2 id="h2"></h2>
+
+            <p>Has completado el desafío con éxito</p>
+
+            <div class="score-card">
+
+                <span class="texto">TU PUNTAJE FINAL</span>
+
+                <h3 id="score"></h3>
+
+                <div class="stats">
+                    <span id="CorrectAns"></span>
+                </div>
+
+            </div>
+
+        </section>
+
+        <section class="leaderboard">
+
+            <div class="leader-title">
+
+                <h3>Scoreboard Global</h3>
+
+                <div class="leader-actions">
+                    <span class="top">Top 5</span>
+                    <button id="clearScores" class="clear-btn">Borrar scores</button>
+                </div>
+
+            </div>
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Pos</th>
+                        <th>Jugador</th>
+                        <th>Puntos</th>
+                    </tr>
+                </thead>
+
+                <tbody id="leaderboard">
+
+                </tbody>
+
+            </table>
+
+        </section>
+
+        <div class="buttons">
+
+            <button id="replay">Jugar otra vez</button>
+
+            <button id="return">Volver al inicio</button>
+
         </div>
+    <canvas id="canvas"></canvas>
+    </main>
 
-        <div>
-            <h3>ScoreBoard Global</h3>
-            <span>Top 5</span>
-        </div>
+    <script src="script.js"></script>
 
-        <span id="leaderboard"></span> <!-- aca va la tabla top 5 -->
-
-        <button id="replay">Jugar de nuevo</button>
-        <button id="return">Volver a pagina principal</button>
-
-
-        <script src="script.js"></script>
-    </section>
 </body>
 
 </html>
