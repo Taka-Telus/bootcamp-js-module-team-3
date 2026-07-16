@@ -265,3 +265,19 @@ function reiniciarTiempo() {
     clearInterval(intervaloTiempo);
     intervaloTiempo = setInterval(time_left, 1000);
 }
+
+
+//settingsscreen
+function settings() {
+    window.location.href = '../SettingsScreen/settings.html'
+}
+
+document.addEventListener('click', (event) => {
+    const settingsButton = event.target.closest('#fa_gear')
+    //             // En lugar de buscar el botón directamente, escuchamos los clics en toda la página
+    //             // y preguntamos si hubo un cic en settingsButton o dentro de él. Esto lo hice así porque tuve problemas con encontrar el icono, ya que lo toma como svg.
+
+    if (settingsButton) {
+        settings();
+    }
+});
