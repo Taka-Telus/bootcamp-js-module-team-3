@@ -17,10 +17,20 @@ localStorage.setItem('puntos', puntosTotales);
 // Mostrar puntos de esta sesión
 document.getElementById('score').textContent = `Puntos: ${puntosMomentaneos}`;
 
-if (puntosMomentaneos >= 20) {
+
+if (puntosMomentaneos >= 1) {
     h2.innerHTML = `¡Increíble Trabajo!`
+    if (localStorage.getItem('sound') === "true") {
+        const confettiSound = new Audio('./confetti.mp3');
+        confettiSound.play();
+    }
+
 } else {
     h2.innerHTML = `¡Eres un perdedor!`
+    if (localStorage.getItem('sound') === "true") {
+        const nopointsSound = new Audio('./nopoints.mp3');
+        nopointsSound.play();
+    }
 }
 
 document.getElementById('return').addEventListener('click', () => {
