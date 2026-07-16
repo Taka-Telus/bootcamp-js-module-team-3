@@ -1,21 +1,51 @@
-const baseUrl = "https:quiz-api.cesar-kastli.workers.dev";
+const baseUrl = "https://quiz-api.cesar-kastli.workers.dev";
 
 const params = new URLSearchParams(window.location.search);
 const gameId = params.get("id");
+
+if (gameId) {
+    localStorage.setItem("lastGameId", gameId);
+}
 
 let preguntaActual = 0;
 let tiempoTerminado = false; // Bandera para saber si se acabó el tiempo
 let numero = 25; // Tiempo inicial en segundos
 let intervaloTiempo;
 let CorrectAns = 0;
-
+let puntajeEnviado = false;
+let k = 100
 // Resetear puntos momentáneos al inicio de cada sesión de juego (sin sumar al anterior)
 localStorage.setItem("puntosMomentaneos", 0);
+if (!localStorage.getItem("puntos")) {
+    localStorage.setItem("puntos", 0);
+}
 
 const section = document.getElementById("section");
-
+const exp = document.getElementById("exp");
 const cajita = document.getElementById('show-time');
-if (cajita) cajita.textContent = numero;
+actualizarTiempoDisplay();
+actualizarPuntaje();
+
+function actualizarTiempoDisplay() {
+    if (cajita) {
+        cajita.textContent = numero;
+        cajita.style.display = 'block';
+        cajita.style.textAlign = 'center';
+        cajita.style.margin = '90px auto 10px';
+        cajita.style.fontSize = '1.5rem';
+        cajita.style.fontWeight = '700';
+        cajita.style.color = '#1F7D0A';
+    }
+}
+
+function actualizarPuntaje() {
+    const puntosActuales = parseInt(localStorage.getItem("puntos")) || 0;
+    const puntosSesion = parseInt(localStorage.getItem("puntosMomentaneos")) || 0;
+
+    if (exp) {
+        exp.textContent = `${puntosActuales + puntosSesion} XP`;
+    }
+}
 
 async function obtenerGame() {
     if (!gameId) {
@@ -37,11 +67,46 @@ async function obtenerGame() {
 // Llamar a la función para obtener el juego y mostrar la primera pregunta
 obtenerGame();
 
-function finalizarQuiz(mensaje) {
+async function enviarPuntajeAlServidor() {
+    if (puntajeEnviado) return;
+
+    const gameIdActual = localStorage.getItem("lastGameId");
+    const nombreJugador = localStorage.getItem("nombreUsuario") || "Jugador";
+    const score = parseInt(localStorage.getItem("puntosMomentaneos")) || 0;
+
+    if (!gameIdActual || score <= 0) return;
+
+    try {
+        const response = await fetch(`${baseUrl}/games/${gameIdActual}/scores`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                playerName: nombreJugador,
+                score: score
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error(`Error ${response.status}`);
+        }
+
+        puntajeEnviado = true;
+        console.log(`Puntaje enviado: ${nombreJugador} - ${score}`);
+    } catch (error) {
+        console.error("No se pudo enviar el puntaje a la API:", error);
+    }
+}
+
+async function finalizarQuiz(mensaje) {
     // Marcar como finalizado y detener el temporizador
     tiempoTerminado = true;
     clearInterval(intervaloTiempo);
     section.innerHTML = `<h2>${mensaje}</h2>`;
+
+    await enviarPuntajeAlServidor();
+
     setTimeout(() => {
         window.location.href = '../Score/ScoreScreen.html';
     }, 2000);
@@ -50,7 +115,7 @@ function finalizarQuiz(mensaje) {
 function calcularYGuardarPuntos() {
     // Calcular puntos: tiempo restante * 4
     // Si no hay tiempo válido, 0 puntos
-    const puntosPregunta = (typeof numero === 'number' && numero > 0) ? numero * 4 : 0;
+    const puntosPregunta = (typeof numero === 'number' && numero > 0) ? Math.round((numero / 25) * k) : 0;
 
     // Obtener los puntos momentáneos actuales
     const puntosActuales = parseInt(localStorage.getItem("puntosMomentaneos")) || 0;
@@ -105,6 +170,7 @@ function mostrarPregunta(game) {
             if (respondida || tiempoTerminado) return;
 
             respondida = true;
+            clearInterval(intervaloTiempo);
 
             const sound = localStorage.getItem('sound') !== 'false';
             const vibrate = localStorage.getItem('vibrate') !== 'false';
@@ -130,6 +196,7 @@ function mostrarPregunta(game) {
 
 
                 calcularYGuardarPuntos();
+                actualizarPuntaje();
 
             } else {
                 console.log("Incorrecto");
@@ -155,7 +222,7 @@ function mostrarPregunta(game) {
             section.appendChild(button);
 
             // EVENT LISTENER de Cuando se hace click en "Siguiente pregunta"
-            button.addEventListener("click", () => {
+            button.addEventListener("click", async () => {
                 // Pasar a la siguiente pregunta
                 preguntaActual++;
                 reiniciarTiempo();
@@ -165,10 +232,13 @@ function mostrarPregunta(game) {
                     mostrarPregunta(game);
                 } else {
                     localStorage.setItem("CorrectAnswers", CorrectAns)
+                    cajita.textContent = ''
                     section.innerHTML = "<h2>¡Quiz finalizado!</h2>";
-                    setTimeout(() => {
-                        window.location.href = '../Score/ScoreScreen.html';
-                    }, 1500);
+
+                    await enviarPuntajeAlServidor();
+
+                    window.location.href = '../Score/ScoreScreen.html';
+                    
                 }
             });
         });
@@ -180,7 +250,7 @@ function time_left() {
     numero--;
 
     // Actualizar el display del tiempo
-    if (cajita) cajita.textContent = numero;
+    actualizarTiempoDisplay();
 
     // Si el tiempo se acabó, finalizar el quiz
     if (numero <= 0) {
@@ -191,7 +261,7 @@ function time_left() {
 
 function reiniciarTiempo() {
     numero = 25;
-    if (cajita) cajita.textContent = numero;
+    actualizarTiempoDisplay();
     clearInterval(intervaloTiempo);
     intervaloTiempo = setInterval(time_left, 1000);
 }
