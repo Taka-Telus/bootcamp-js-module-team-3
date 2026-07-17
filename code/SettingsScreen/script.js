@@ -52,6 +52,6 @@ const logout = document.getElementById('logout');
 logout.addEventListener('click', (event) => {
   localStorage.setItem('nombreUsuario', "");
   window.location.href = '../LoginScreen/login.html'
-  location.reload
+  location.reload()
 
 });

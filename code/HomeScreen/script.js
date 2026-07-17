@@ -62,7 +62,7 @@ addGame.addEventListener('click', () => {
 if (!localStorage.getItem("puntos")) {
     localStorage.setItem("puntos", 0);
 }
-score = localStorage.getItem("puntos")
+const score = localStorage.getItem("puntos")
 numero.innerHTML = `${score}`
 exp.innerHTML = `${score} XP`
 
