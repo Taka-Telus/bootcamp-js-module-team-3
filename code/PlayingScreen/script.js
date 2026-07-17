@@ -26,6 +26,7 @@ const cajita = document.getElementById('show-time');
 actualizarTiempoDisplay();
 actualizarPuntaje();
 
+
 function actualizarTiempoDisplay() {
     if (cajita) {
         cajita.textContent = numero;
@@ -59,10 +60,11 @@ async function obtenerGame() {
 
         mostrarPregunta(game);
         intervaloTiempo = setInterval(time_left, 1000);
-    } catch (error) {
+        } 
+    catch (error) {
         console.error(error);
         section.innerHTML = "<h2>Error al cargar el juego.</h2>";
-    }
+        }
 }
 // Llamar a la función para obtener el juego y mostrar la primera pregunta
 obtenerGame();
@@ -125,6 +127,14 @@ function calcularYGuardarPuntos() {
     console.log(`Puntos ganados: ${puntosPregunta}, Total momentáneo: ${puntosTotal}`);
 }
 
+    const sound = localStorage.getItem('sound') !== 'false';
+    const vibrate = localStorage.getItem('vibrate') !== 'false';
+    if (sound) {
+        const playingSound = new Audio('./playingSound.mp3');
+        playingSound.loop = true;
+        playingSound.play();
+    }
+
 function mostrarPregunta(game) {
     if (tiempoTerminado) return;
 
@@ -157,6 +167,7 @@ function mostrarPregunta(game) {
         const j = Math.floor(Math.random() * (i + 1));
         [opcionesObj[i], opcionesObj[j]] = [opcionesObj[j], opcionesObj[i]];
     }
+    
 
     opcionesObj.forEach((opt) => {
         const li = document.createElement("li");
@@ -172,8 +183,7 @@ function mostrarPregunta(game) {
             respondida = true;
             clearInterval(intervaloTiempo);
 
-            const sound = localStorage.getItem('sound') !== 'false';
-            const vibrate = localStorage.getItem('vibrate') !== 'false';
+            
 
             if (li.dataset.correct === "true") {
                 console.log("Correcto");
