@@ -3,38 +3,24 @@ const puntosMomentaneos = parseInt(localStorage.getItem('puntosMomentaneos')) ||
 const puntosActuales = parseInt(localStorage.getItem('puntos')) || 0;
 const numero = document.getElementById('numero');
 const CorrectAns = document.getElementById('CorrectAns');
-const replay = document.getElementById('replay');   
+const replay = document.getElementById('replay');
 const leaderboard = document.getElementById('leaderboard');
 const clearScoresButton = document.getElementById('clearScores');
 const apiBaseUrl = 'https://quiz-api.cesar-kastli.workers.dev';
 const gameId = localStorage.getItem('lastGameId') || new URLSearchParams(window.location.search).get('id');
 const h2 = document.getElementById('h2')
-const trophy = document.getElementById("trophy")
-
 
 // Sumar puntos momentáneos a los puntos totales
 const puntosTotales = puntosActuales + puntosMomentaneos;
 localStorage.setItem('puntos', puntosTotales);
 
 // Mostrar puntos de esta sesión
-document.getElementById('score').textContent = `${puntosMomentaneos}`;
+document.getElementById('score').textContent = `Puntos: ${puntosMomentaneos}`;
 
-
-if (puntosMomentaneos >= 1) {
+if (puntosMomentaneos >= 20) {
     h2.innerHTML = `¡Increíble Trabajo!`
-    trophy.style.display = "block"
-    if (localStorage.getItem('sound') === "true") {
-        const confettiSound = new Audio('./confetti.mp3');
-        confettiSound.play();
-    }
-
 } else {
     h2.innerHTML = `¡Eres un perdedor!`
-        trophy.style.display = "none"
-    if (localStorage.getItem('sound') === "true") {
-        const nopointsSound = new Audio('./nopoints.mp3');
-        nopointsSound.play();
-    }
 }
 
 document.getElementById('return').addEventListener('click', () => {
@@ -84,7 +70,7 @@ async function cargarScores() {
             .map((entry, index) => `
                 <tr>
                     <td>${index + 1}</td>
-                    <td>${entry.playerName}</td>
+                    <td>${entry.playerName || 'Jugador'}</td>
                     <td>${entry.score ?? 0}</td>
                 </tr>
             `)

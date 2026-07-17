@@ -39,7 +39,6 @@ nav a{
 .derechanav {
     display: flex;
     justify-content: space-around;
-    min-width: 10%;
 }
 
 .fa-gear {
@@ -177,7 +176,7 @@ li:hover {
 
 button {
     margin-top: 10px;
-    width: 52%;
+    width: 75%;
     padding: 18px;
     border: none;
     border-radius: 10px;
